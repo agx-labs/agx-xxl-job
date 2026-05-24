@@ -1,0 +1,23 @@
+### ======================== LOCAL 本地开发环境 ========================
+spring:
+  ### datasource（本地 DB，直连开发机）
+  datasource:
+    url: jdbc:mysql://192.168.1.12:10001/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  ### mail
+  mail:
+    host: smtp.qq.com
+    port: 25
+    username: xxx@qq.com
+    from: xxx@qq.com
+    password: xxx
+
+### xxl-job（环境相关）
+xxl:
+  job:
+    accessToken: agx-xxl-job
+    timeout: 3
+

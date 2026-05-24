@@ -13,7 +13,6 @@
     <modules>
         <module>xxl-job-core</module>
         <module>xxl-job-admin</module>
-        <module>xxl-job-executor-samples</module>
     </modules>
 
     <properties>
@@ -34,6 +33,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
         <!-- plugin -->
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
@@ -70,6 +70,8 @@
         <spring-ai.version>2.0.0-M4</spring-ai.version>
         <!-- dify -->
         <dify-java-client.version>1.2.5</dify-java-client.version>
+        <!-- 默认跳过 GPG 签名 & Central 发布，-P release 时覆盖为 false -->
+        <release.skip>true</release.skip>
     </properties>
 
     <dependencyManagement>
@@ -215,141 +217,196 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <!-- 多开发环境集成-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                    <configuration>
+                        <delimiters>
+                            <delimiter>@</delimiter>
+                        </delimiters>
+                        <useDefaultDelimiters>false</useDefaultDelimiters>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <!-- Flatten：统一解析 ${revision} 占位符 -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
+                    <inherited>true</inherited>
+                    <executions>
+                        <execution>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <!-- 避免IDE将 .flattened-pom.xml 自动识别为功能模块 -->
+                                <updatePomFile>true</updatePomFile>
+                                <flattenMode>oss</flattenMode>
+                                <pomElements>
+                                    <!-- 展开父级依赖关系，解决继承问题 -->
+                                    <parent>expand</parent>
+                                    <!-- 保留构建配置，包含resources等配置 -->
+                                    <build>keep</build>
+                                    <!-- 保留插件管理配置，子模块能继承插件设置 -->
+                                    <pluginManagement>keep</pluginManagement>
+                                    <!-- 保留依赖管理，子模块能继承版本控制 -->
+                                    <dependencyManagement>keep</dependencyManagement>
+                                    <!-- 保留属性配置，如版本号等变量 -->
+                                    <properties>keep</properties>
+                                    <!-- 保留profiles配置，支持多环境和条件激活 -->
+                                    <profiles>keep</profiles>
+                                    <!-- 移除发布管理配置，避免冲突 -->
+                                    <distributionManagement>remove</distributionManagement>
+                                    <!-- 移除仓库配置，使用默认仓库 -->
+                                    <repositories>remove</repositories>
+                                </pomElements>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>flatten.clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Compiler -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <parameters>true</parameters>
+                    </configuration>
+                </plugin>
+                <!-- Source -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Javadoc -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <doclint>none</doclint>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- GPG：默认跳过，-P release 时激活 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <configuration>
+                        <useAgent>false</useAgent>
+                        <skip>${release.skip}</skip>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Maven Central 发布：默认跳过，-P release 时激活 -->
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <skipPublishing>${release.skip}</skipPublishing>
+                        <excludeArtifacts>
+                            <artifact>xxl-job-admin</artifact>
+                            <artifact>xxl-job-executor-samples</artifact>
+                            <artifact>xxl-job-executor-sample-frameless</artifact>
+                            <artifact>xxl-job-executor-sample-springboot</artifact>
+                            <artifact>xxl-job-executor-sample-springboot-ai</artifact>
+                        </excludeArtifacts>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <profiles>
-
+        <!-- ===================== 发布 profile ===================== -->
         <profile>
+            <!-- 激活方式：mvn clean deploy -P release -->
             <id>release</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
+                <!-- 仅发布 core 库，admin/samples 不上传 Maven Central -->
                 <module>xxl-job-core</module>
             </modules>
+            <properties>
+                <!-- 开启 GPG 签名 & Central 发布 -->
+                <release.skip>false</release.skip>
+            </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>flatten-maven-plugin</artifactId>
-                        <version>${flatten-maven-plugin.version}</version>
-                        <inherited>true</inherited>
-                        <executions>
-                            <execution>
-                                <id>flatten</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>flatten</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- 避免IDE将 .flattened-pom.xml 自动识别为功能模块 -->
-                                    <updatePomFile>true</updatePomFile>
-                                    <flattenMode>oss</flattenMode>
-                                    <pomElements>
-                                        <!-- 展开父级依赖关系，解决继承问题 -->
-                                        <parent>expand</parent>
-                                        <!-- 保留构建配置，包含resources等配置 -->
-                                        <build>keep</build>
-                                        <!-- 保留插件管理配置，子模块能继承插件设置 -->
-                                        <pluginManagement>keep</pluginManagement>
-                                        <!-- 保留依赖管理，子模块能继承版本控制 -->
-                                        <dependencyManagement>keep</dependencyManagement>
-                                        <!-- 保留属性配置，如版本号等变量 -->
-                                        <properties>keep</properties>
-                                        <!-- 保留profiles配置，支持多环境和条件激活 -->
-                                        <profiles>keep</profiles>
-                                        <!-- 移除发布管理配置，避免冲突 -->
-                                        <distributionManagement>remove</distributionManagement>
-                                        <!-- 移除仓库配置，使用默认仓库 -->
-                                        <repositories>remove</repositories>
-                                    </pomElements>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>flatten.clean</id>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <!-- Compiler -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>${maven-compiler-plugin.version}</version>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <target>${maven.compiler.target}</target>
-                            <parameters>true</parameters>
-                        </configuration>
                     </plugin>
                     <!-- Source -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven-source-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <!-- Javadoc -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven-javadoc-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <doclint>none</doclint>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                     <!-- GPG -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <configuration>
-                            <useAgent>false</useAgent>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <!-- maven central -->
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central-publishing-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>central</publishingServerId>
-                            <excludeArtifacts>
-                                <artifact>xxl-job-admin</artifact>
-                                <artifact>xxl-job-executor-samples</artifact>
-                                <artifact>xxl-job-executor-sample-frameless</artifact>
-                                <artifact>xxl-job-executor-sample-springboot</artifact>
-                                <artifact>xxl-job-executor-sample-springboot-ai</artifact>
-                            </excludeArtifacts>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

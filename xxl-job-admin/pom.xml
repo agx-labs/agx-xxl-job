@@ -65,25 +65,65 @@
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-sso-core</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
+        <!-- 开启资源过滤，使 @spring.active@ 占位符被 Maven profile 替换（分隔符配置继承自父 pom pluginManagement） -->
+        <resources>
+            <!-- 只对需要替换变量的文件开启 filtering -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <!--<include>bootstrap.yml</include>-->
+                    <include>application.yml</include>
+                    <include>application-${spring.active}.yml</include>
+                    <include>logback-spring.xml</include>
+                </includes>
+            </resource>
+            <!-- 其他资源保持原样拷贝（mapper XML 绝对不能 filtering，否则 MyBatis 解析失败） -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>i18n/**</include>
+                    <include>mapper/**</include>
+                    <include>static/**</include>
+                    <include>templates/**</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
             </plugin>
-
         </plugins>
     </build>
+
+    <profiles>
+        <!-- ===================== 环境 profiles ===================== -->
+        <profile>
+            <id>local</id>
+            <properties>
+                <spring.active>local</spring.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <spring.active>dev</spring.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.active>prod</spring.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

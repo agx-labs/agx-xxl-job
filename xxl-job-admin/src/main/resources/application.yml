@@ -1,19 +1,8 @@
-### web
-server:
-  port: 8999
-  servlet:
-    context-path: /xxl-job-admin
-
-### actuator
-management:
-  endpoints:
-    web:
-      base-path: /actuator
-  health:
-    mail:
-      enabled: false
-
+### 激活环境：由 Maven profile 注入（-P local/dev/prod），默认 local
 spring:
+  profiles:
+    active: @spring.active@
+
   ### resources
   mvc:
     servlet:
@@ -33,20 +22,12 @@ spring:
       number_format: "0.##########"
       new_builtin_class_resolver: safer
 
-  ### mybatis
-  # (mybatis config is at root level, see below)
-
-  ### datasource-pool
+  ### datasource
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    ### xxl-job, datasource
-    url: jdbc:mysql://192.168.1.12:10001/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      minimum-idle: 10
-      maximum-pool-size: 30
+      minimum-idle: 5
+      maximum-pool-size: 20
       auto-commit: true
       idle-timeout: 30000
       pool-name: HikariCP
@@ -55,13 +36,8 @@ spring:
       connection-test-query: SELECT 1
       validation-timeout: 1000
 
-  ### xxl-job, email
+  ### mail
   mail:
-    host: smtp.qq.com
-    port: 25
-    username: xxx@qq.com
-    from: xxx@qq.com
-    password: xxx
     properties:
       mail:
         smtp:
@@ -71,18 +47,28 @@ spring:
             required: true
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
+### web
+server:
+  port: 8081
+  servlet:
+    context-path: /xxl-job-admin
+
+### actuator
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+  health:
+    mail:
+      enabled: false
 
 ### mybatis
 mybatis:
   mapper-locations: classpath:/mapper/*Mapper.xml
 
-### xxl-job
+### xxl-job（公共，不因环境变化的配置）
 xxl:
   job:
-    # access token
-    accessToken: agx-xxl-job
-    # timeout by second, default 3s
-    timeout: 3
     # i18n (default is zh_CN, and you can choose "zh_CN", "zh_TC" and "en")
     i18n: zh_CN
     # triggerpool max size
@@ -97,7 +83,7 @@ xxl:
     # log retention days
     logretentiondays: 30
 
-### xxl-sso
+### xxl-sso（公共）
 xxl-sso:
   token:
     key: xxl_job_login_token
@@ -107,4 +93,3 @@ xxl-sso:
       paths:
     login:
       path: /auth/login
-
