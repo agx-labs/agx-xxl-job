@@ -1,7 +1,5 @@
 package com.xxl.job.admin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,28 +13,29 @@ import java.net.InetAddress;
 @SpringBootApplication
 public class XxlJobAdminApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobAdminApplication.class);
-
     public static void main(String[] args) throws Exception {
         ConfigurableApplicationContext context = SpringApplication.run(XxlJobAdminApplication.class, args);
         Environment env = context.getEnvironment();
 
-        String port = env.getProperty("server.port", "8080");
+        String port        = env.getProperty("server.port", "8080");
         String contextPath = env.getProperty("server.servlet.context-path", "");
-        String host = InetAddress.getLocalHost().getHostAddress();
-        String profile = String.join(",", env.getActiveProfiles());
+        String appName     = env.getProperty("spring.application.name", "xxl-job-admin");
+        String profile     = String.join(",", env.getActiveProfiles());
+        String host        = InetAddress.getLocalHost().getHostAddress();
 
-        logger.info("""
-                \n----------------------------------------------------------
-                \tApplication  : {}
-                \tProfile(s)   : {}
-                \tLocal        : http://localhost:{}{}
-                \tExternal     : http://{}:{}{}
-                ----------------------------------------------------------""",
-                env.getProperty("spring.application.name", "xxl-job-admin"),
-                profile,
-                port, contextPath,
-                host, port, contextPath);
+        String localUrl    = "http://localhost:" + port + contextPath;
+        String externalUrl = "http://" + host + ":" + port + contextPath;
+
+        // 使用 System.out 输出，避免 logback ANSI 颜色码干扰 IDE 超链接识别
+        System.out.printf("""
+                %n----------------------------------------------------------
+                \tApplication  : %s
+                \tProfile(s)   : %s
+                \tLocal        : %s
+                \tExternal     : %s
+                ----------------------------------------------------------
+                %n""",
+                appName, profile, localUrl, externalUrl);
     }
 
 }

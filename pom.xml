@@ -224,6 +224,18 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <!-- 多开发环境集成-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
