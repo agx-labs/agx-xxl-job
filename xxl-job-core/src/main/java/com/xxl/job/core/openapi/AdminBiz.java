@@ -1,7 +1,6 @@
 package com.xxl.job.core.openapi;
 
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.tool.response.Response;
 
 import java.util.List;
@@ -45,17 +44,34 @@ public interface AdminBiz {
     // ---------------------- job operate ----------------------
 
     // jobAdd
+    public Response<String> jobAdd(JobInfoRequest request);
 
     // jobUpdate
+    public Response<String> jobUpdate(JobInfoRequest request);
 
     // jobDelete
+    public Response<String> jobDelete(JobInfoRequest request);
 
     // jobQuery
+    public Response<JobInfoResult> jobQuery(JobInfoRequest request);
 
     // jobStart
+    public Response<String> jobStart(JobInfoRequest request);
 
     // jobStop
+    public Response<String> jobStop(JobInfoRequest request);
 
     // jobTrigger
+    public Response<String> jobTrigger(JobInfoRequest request);
+
+    // ---------------------- job log operate ----------------------
+
+    // logQuery
+    public Response<LogResult> logQuery(LogRequest request);
+
+    public Response<String> logKill(LogRequest request);
+
+    // ---------------------- job group operate ----------------------
+    public Response<GroupResult> groupQuery(GroupRequest request);
 
 }

@@ -3,8 +3,7 @@ package com.xxl.job.admin.scheduler.openapi;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
@@ -32,9 +31,9 @@ public class OpenApiController {
     @ResponseBody
     @XxlSso(login = false)
     public Object api(HttpServletRequest request,
-                               @PathVariable("uri") String uri,
-                               @RequestHeader(value = Const.XXL_JOB_ACCESS_TOKEN, required = false) String accesstoken,
-                               @RequestBody(required = false) String requestBody) {
+                      @PathVariable("uri") String uri,
+                      @RequestHeader(value = Const.XXL_JOB_ACCESS_TOKEN, required = false) String accesstoken,
+                      @RequestBody(required = false) String requestBody) {
 
         // valid
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
@@ -67,9 +66,49 @@ public class OpenApiController {
                 case "registryRemove": {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);
                     return adminBiz.registryRemove(registryParam);
-                    }
+                }
+                case "jobAdd": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobAdd(jobInfoRequest);
+                }
+                case "jobUpdate": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobUpdate(jobInfoRequest);
+                }
+                case "jobDelete": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobDelete(jobInfoRequest);
+                }
+                case "jobQuery": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobQuery(jobInfoRequest);
+                }
+                case "jobStart": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobStart(jobInfoRequest);
+                }
+                case "jobStop": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobStop(jobInfoRequest);
+                }
+                case "jobTrigger": {
+                    JobInfoRequest jobInfoRequest = GsonTool.fromJson(requestBody, JobInfoRequest.class);
+                    return adminBiz.jobTrigger(jobInfoRequest);
+                }
+                case "logQuery": {
+                    LogRequest logRequest = GsonTool.fromJson(requestBody, LogRequest.class);
+                    return adminBiz.logQuery(logRequest);
+                }
+                case "logKill": {
+                    LogRequest logRequest = GsonTool.fromJson(requestBody, LogRequest.class);
+                    return adminBiz.logKill(logRequest);
+                }
+                case "groupQuery": {
+                    GroupRequest groupRequest = GsonTool.fromJson(requestBody, GroupRequest.class);
+                    return adminBiz.groupQuery(groupRequest);
+                }
                 default:
-                    return Response.ofFail("invalid request, uri-mapping("+ uri +") not found.");
+                    return Response.ofFail("invalid request, uri-mapping(" + uri + ") not found.");
             }
         } catch (Exception e) {
             return Response.ofFail("openapi invoke error: " + e.getMessage());
