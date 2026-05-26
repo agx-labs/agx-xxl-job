@@ -19,8 +19,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 /**
- * @author xuxueli 2017-07-27 21:54:20
+ * Admin业务实现
+ * <p></p>
+ *
+ * @author xuxueli
+ * @author gengchen
+ * @since 2026/5/26
  */
 @Service
 public class AdminBizImpl implements AdminBiz {
@@ -57,6 +63,9 @@ public class AdminBizImpl implements AdminBiz {
 
     // ---------------------- job CRUD ----------------------
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> jobAdd(JobInfoRequest req) {
         if (req == null) {
@@ -67,6 +76,9 @@ public class AdminBizImpl implements AdminBiz {
         return xxlJobService.add(jobInfo, systemLogin());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> jobUpdate(JobInfoRequest req) {
         if (req == null || req.getId() <= 0) {
@@ -77,6 +89,9 @@ public class AdminBizImpl implements AdminBiz {
         return xxlJobService.update(jobInfo, systemLogin());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> jobDelete(JobInfoRequest req) {
         if (req == null || req.getId() <= 0) {
@@ -85,6 +100,9 @@ public class AdminBizImpl implements AdminBiz {
         return xxlJobService.remove(req.getId(), systemLogin());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<JobInfoResult> jobQuery(JobInfoRequest req) {
         if (req == null || req.getId() <= 0) {
@@ -101,6 +119,9 @@ public class AdminBizImpl implements AdminBiz {
 
     // ---------------------- job lifecycle ----------------------
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> jobStart(JobInfoRequest req) {
         if (req == null || req.getId() <= 0) {
@@ -109,6 +130,9 @@ public class AdminBizImpl implements AdminBiz {
         return xxlJobService.start(req.getId(), systemLogin());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> jobStop(JobInfoRequest req) {
         if (req == null || req.getId() <= 0) {
@@ -117,6 +141,9 @@ public class AdminBizImpl implements AdminBiz {
         return xxlJobService.stop(req.getId(), systemLogin());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> jobTrigger(JobInfoRequest req) {
         if (req == null || req.getId() <= 0) {
@@ -127,6 +154,9 @@ public class AdminBizImpl implements AdminBiz {
 
     // ---------------------- log ----------------------
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<LogResult> logQuery(LogRequest logRequest) {
         if (logRequest == null || logRequest.getLogId() <= 0) {
@@ -163,6 +193,9 @@ public class AdminBizImpl implements AdminBiz {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> logKill(LogRequest logRequest) {
         if (logRequest == null || logRequest.getLogId() <= 0) {
@@ -211,6 +244,9 @@ public class AdminBizImpl implements AdminBiz {
 
     // ---------------------- group ----------------------
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<GroupResult> groupQuery(GroupRequest groupRequest) {
         if (groupRequest == null) {

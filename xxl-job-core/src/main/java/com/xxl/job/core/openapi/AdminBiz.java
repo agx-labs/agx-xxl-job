@@ -43,35 +43,118 @@ public interface AdminBiz {
 
     // ---------------------- job operate ----------------------
 
-    // jobAdd
+    /**
+     * 新增任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> jobAdd(JobInfoRequest request);
 
-    // jobUpdate
+    /**
+     * 更新任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> jobUpdate(JobInfoRequest request);
 
-    // jobDelete
+    /**
+     * 删除任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> jobDelete(JobInfoRequest request);
 
-    // jobQuery
+    /**
+     * 查询任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<JobInfoResult> jobQuery(JobInfoRequest request);
 
-    // jobStart
+    /**
+     * 开始任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> jobStart(JobInfoRequest request);
 
-    // jobStop
+    /**
+     * 停止任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> jobStop(JobInfoRequest request);
 
-    // jobTrigger
+    /**
+     * 触发任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> jobTrigger(JobInfoRequest request);
 
     // ---------------------- job log operate ----------------------
 
-    // logQuery
+    /**
+     * 日志查询
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<LogResult> logQuery(LogRequest request);
 
+    /**
+     * 杀死任务
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<String> logKill(LogRequest request);
 
     // ---------------------- job group operate ----------------------
+
+    /**
+     * 执行器查询
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public Response<GroupResult> groupQuery(GroupRequest request);
 
 }

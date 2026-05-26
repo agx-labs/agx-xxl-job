@@ -24,6 +24,15 @@ public interface XxlJobGroupMapper {
 
     public XxlJobGroup load(@Param("id") int id);
 
+    /**
+     * 根据appname查询执行器信息
+     * <p></p>
+     *
+     * @param appname 执行器名称
+     * @return {@link XxlJobGroup}
+     * @author gengchen
+     * @since 2026/5/26
+     */
     public XxlJobGroup loadByAppName(@Param("appname") String appname);
 
     public List<XxlJobGroup> pageList(@Param("offset") int offset,

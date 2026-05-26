@@ -4,47 +4,123 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Job info request model for AdminBiz API
+ * 任务信息请求对象
  *
  * @author gengchen
- * @since 2026/5/26 01:30
+ * @since 2026/5/26
  */
 public class JobInfoRequest implements Serializable {
+
+    private static final long serialVersionUID = 42L;
+    /**
+     * 地址列表
+     */
     private String addressList;
 
+    /**
+     * 主键ID
+     */
+    private int id;
 
-    private int id;                // 主键ID
-
-    private int jobGroup;        // 执行器主键ID
+    /**
+     * 执行器主键ID
+     */
+    private int jobGroup;
+    /**
+     * 任务描述
+     */
     private String jobDesc;
 
+    /**
+     * 创建时间
+     */
     private Date addTime;
+    /**
+     * 更新时间
+     */
     private Date updateTime;
 
-    private String author;        // 负责人
-    private String alarmEmail;    // 报警邮件
+    /**
+     * 负责人
+     */
+    private String author;
+    /**
+     * 报警邮件
+     */
+    private String alarmEmail;
 
-    private String scheduleType;            // 调度类型：ScheduleTypeEnum
-    private String scheduleConf;            // 调度配置，值含义取决于调度类型
-    private String misfireStrategy;            // 调度过期策略：MisfireStrategyEnum
+    /**
+     * 调度类型：ScheduleTypeEnum
+     */
+    private String scheduleType;
+    /**
+     * 调度配置，值含义取决于调度类型
+     */
+    private String scheduleConf;
+    /**
+     * 调度过期策略：MisfireStrategyEnum
+     */
+    private String misfireStrategy;
 
-    private String executorRouteStrategy;    // 执行器路由策略：ExecutorRouteStrategyEnum
-    private String executorHandler;            // 执行器，任务Handler名称
-    private String executorParam;            // 执行器，任务参数
-    private String executorBlockStrategy;    // 阻塞处理策略：ExecutorBlockStrategyEnum
-    private int executorTimeout;            // 任务执行超时时间，单位秒
-    private int executorFailRetryCount;        // 失败重试次数
+    /**
+     * 执行器路由策略：ExecutorRouteStrategyEnum
+     */
+    private String executorRouteStrategy;
+    /**
+     * 执行器，任务Handler名称
+     */
+    private String executorHandler;
+    /**
+     * 执行器，任务参数
+     */
+    private String executorParam;
+    /**
+     * 阻塞处理策略：ExecutorBlockStrategyEnum
+     */
+    private String executorBlockStrategy;
+    /**
+     * 任务执行超时时间，单位秒
+     */
+    private int executorTimeout;
+    /**
+     * 失败重试次数
+     */
+    private int executorFailRetryCount;
 
-    private String glueType;        // GLUE类型：GlueTypeEnum
-    private String glueSource;        // GLUE源代码
-    private String glueRemark;        // GLUE备注
-    private Date glueUpdatetime;    // GLUE更新时间
+    /**
+     * GLUE类型：GlueTypeEnum
+     */
+    private String glueType;
+    /**
+     * GLUE源代码
+     */
+    private String glueSource;
+    /**
+     * GLUE备注
+     */
+    private String glueRemark;
+    /**
+     * GLUE更新时间
+     */
+    private Date glueUpdatetime;
 
-    private String childJobId;        // 子任务ID，多个逗号分隔
+    /**
+     * 子任务ID，多个逗号分隔
+     */
+    private String childJobId;
 
-    private int triggerStatus;        // 调度状态：TriggerStatus
-    private long triggerLastTime;    // 上次调度时间
-    private long triggerNextTime;    // 下次调度时间
+    /**
+     * 调度状态：TriggerStatus
+     */
+    private int triggerStatus;
+    /**
+     * 上次调度时间
+     */
+    private long triggerLastTime;
+    /**
+     * 下次调度时间
+     */
+    private long triggerNextTime;
 
     public String getAddressList() {
         return addressList;
@@ -245,5 +321,4 @@ public class JobInfoRequest implements Serializable {
     public void setTriggerNextTime(long triggerNextTime) {
         this.triggerNextTime = triggerNextTime;
     }
-
 }

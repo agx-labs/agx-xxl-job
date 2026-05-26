@@ -25,7 +25,16 @@ public class OpenApiController {
     private AdminBiz adminBiz;
 
     /**
-     * api
+     * 公共api
+     * <p></p>
+     *
+     * @param request     {@link HttpServletRequest}
+     * @param uri         路由
+     * @param accesstoken 访问令牌
+     * @param requestBody 请求体
+     * @return 返回对象
+     * @author gengchen
+     * @since 2026/5/26 新增jobAdd、jobUpdate、jobDelete、jobQuery、jobStart、jobStop、jobTrigger 公共API接口
      */
     @RequestMapping("/api/{uri}")
     @ResponseBody
