@@ -18,6 +18,6 @@ spring:
 ### xxl-job（环境相关）
 xxl:
   job:
-    accessToken: agx-xxl-job
+    accessToken: agx
     timeout: 3
 
