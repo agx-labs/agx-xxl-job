@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,8 +41,11 @@ public class AdminBizImpl implements AdminBiz {
      * 每次调用新建实例，避免多线程共享可变对象的风险
      */
     private static LoginInfo systemLogin() {
+        List<String> roleList = new ArrayList<>();
+        roleList.add(Consts.ADMIN_ROLE);
         LoginInfo loginInfo = new LoginInfo();
-        loginInfo.setUserName("system");
+        loginInfo.setUserName("open_api");
+        loginInfo.setRoleList(roleList);
         return loginInfo;
     }
 
