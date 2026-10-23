@@ -379,6 +379,54 @@
 
     <profiles>
         <!-- ===================== 发布 profile ===================== -->
+        <!-- ===================== 发布 profile ===================== -->
+        <profile>
+            <!-- 激活方式：mvn clean deploy -P release -->
+            <id>nexus</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <!-- 仅发布 core 库，admin/samples 不上传 Maven Central -->
+                <module>xxl-job-core</module>
+            </modules>
+
+            <distributionManagement>
+                <repository>
+                    <id>nexus-releases</id>
+                    <url>http://192.168.31.2:10051/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>nexus-snapshots</id>
+                    <url>http://192.168.31.2:10051/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+
+            <properties>
+                <!-- 开启 GPG 签名 & Central 发布 -->
+                <release.skip>true</release.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Compiler -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                    </plugin>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <!-- 激活方式：mvn clean deploy -P release -->
             <id>release</id>
@@ -424,5 +472,6 @@
             </build>
         </profile>
     </profiles>
+
 
 </project>
