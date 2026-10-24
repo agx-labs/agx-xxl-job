@@ -68,6 +68,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <!-- 开启资源过滤，使 @spring.active@ 占位符被 Maven profile 替换（分隔符配置继承自父 pom pluginManagement） -->
         <resources>
             <!-- 只对需要替换变量的文件开启 filtering -->

@@ -390,7 +390,6 @@
                 <!-- 仅发布 core 库，admin/samples 不上传 Maven Central -->
                 <module>xxl-job-core</module>
             </modules>
-
             <distributionManagement>
                 <repository>
                     <id>nexus-releases</id>
