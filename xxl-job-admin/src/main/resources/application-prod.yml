@@ -2,7 +2,7 @@
 spring:
   ### datasource（本地 DB，直连开发机）
   datasource:
-    url: jdbc:mysql://192.168.1.12:10001/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.31.2:10001/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
