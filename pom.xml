@@ -377,12 +377,25 @@
         </pluginManagement>
     </build>
 
+    <repositories>
+        <repository>
+            <id>nexus-public</id>
+            <url>http://192.168.31.2:10051/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <profiles>
         <!-- ===================== 发布 profile ===================== -->
         <!-- ===================== 发布 profile ===================== -->
         <profile>
             <!-- 激活方式：mvn clean deploy -P release -->
-            <id>nexus</id>
+            <id>release</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -428,7 +441,7 @@
 
         <profile>
             <!-- 激活方式：mvn clean deploy -P release -->
-            <id>release</id>
+            <id>release-central</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
