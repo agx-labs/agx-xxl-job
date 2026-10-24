@@ -123,7 +123,7 @@ public interface AdminBiz {
     // ---------------------- job log operate ----------------------
 
     /**
-     * 日志查询
+     * 日志正文查询
      * <p></p>
      *
      * @param request 入参 {@link JobInfoRequest}
@@ -131,7 +131,19 @@ public interface AdminBiz {
      * @author gengchen
      * @since 2026/5/26
      */
-    public Response<LogResult> logQuery(LogRequest request);
+    public Response<LogResult> logContextQuery(LogRequest request);
+
+
+    /**
+     * 日志记录查询
+     * <p></p>
+     *
+     * @param request 入参 {@link JobInfoRequest}
+     * @return 出参 {@link Response}
+     * @author gengchen
+     * @since 2026/5/26
+     */
+    public Response<JobLogResult> logQuery(JobLogRequest request);
 
     /**
      * 杀死任务

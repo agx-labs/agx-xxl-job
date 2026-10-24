@@ -105,8 +105,12 @@ public class OpenApiController {
                     return adminBiz.jobTrigger(jobInfoRequest);
                 }
                 case "logQuery": {
-                    LogRequest logRequest = GsonTool.fromJson(requestBody, LogRequest.class);
+                    JobLogRequest logRequest = GsonTool.fromJson(requestBody, JobLogRequest.class);
                     return adminBiz.logQuery(logRequest);
+                }
+                case "logContextQuery": {
+                    LogRequest logRequest = GsonTool.fromJson(requestBody, LogRequest.class);
+                    return adminBiz.logContextQuery(logRequest);
                 }
                 case "logKill": {
                     LogRequest logRequest = GsonTool.fromJson(requestBody, LogRequest.class);

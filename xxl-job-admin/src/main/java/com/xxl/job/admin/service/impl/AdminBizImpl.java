@@ -118,7 +118,7 @@ public class AdminBizImpl implements AdminBiz {
             return Response.ofFail("job not found");
         }
         JobInfoResult jobInfoResult = new JobInfoResult();
-        BeanUtils.copyProperties(req, jobInfoResult);
+        BeanUtils.copyProperties(jobInfo, jobInfoResult);
         return Response.ofSuccess(jobInfoResult);
     }
 
@@ -163,12 +163,12 @@ public class AdminBizImpl implements AdminBiz {
      * {@inheritDoc}
      */
     @Override
-    public Response<LogResult> logQuery(LogRequest logRequest) {
-        if (logRequest == null || logRequest.getLogId() <= 0) {
+    public Response<LogResult> logContextQuery(LogRequest req) {
+        if (req == null || req.getLogId() <= 0) {
             return Response.ofFail("logId is invalid");
         }
         try {
-            XxlJobLog jobLog = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(logRequest.getLogId());
+            XxlJobLog jobLog = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(req.getLogId());
             if (jobLog == null) {
                 return Response.ofFail("log not found");
             }
@@ -178,12 +178,12 @@ public class AdminBizImpl implements AdminBiz {
                 return Response.ofFail("executor address is invalid");
             }
 
-            long logDateTim = logRequest.getLogDateTim() > 0
-                    ? logRequest.getLogDateTim()
+            long logDateTim = req.getLogDateTim() > 0
+                    ? req.getLogDateTim()
                     : jobLog.getTriggerTime().getTime();
 
             Response<LogResult> logResult = executorBiz.log(
-                    new LogRequest(logDateTim, logRequest.getLogId(), logRequest.getFromLineNum()));
+                    new LogRequest(logDateTim, req.getLogId(), req.getFromLineNum()));
 
             // 标记是否结束
             if (logResult.getData() != null
@@ -193,10 +193,26 @@ public class AdminBizImpl implements AdminBiz {
             }
             return logResult;
         } catch (Exception e) {
-            logger.error("logQuery error, logId={}", logRequest.getLogId(), e);
+            logger.error("logQuery error, logId={}", req.getLogId(), e);
             return Response.ofFail(e.getMessage());
         }
     }
+
+
+    @Override
+    public Response<JobLogResult> logQuery(JobLogRequest req) {
+        if (req == null || req.getId() <= 0) {
+            return Response.ofFail("logId is invalid");
+        }
+        XxlJobLog jobLog = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(req.getId());
+        if (jobLog == null) {
+            return Response.ofFail("log not found");
+        }
+        JobLogResult jobLogResult = new JobLogResult();
+        BeanUtils.copyProperties(jobLog, jobLogResult);
+        return Response.ofSuccess(jobLogResult);
+    }
+
 
     /**
      * {@inheritDoc}
